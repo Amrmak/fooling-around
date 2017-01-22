@@ -7,7 +7,7 @@ $('#action-button2').click(function () {
 });
 function getPostByID(id) {
   $.ajax({
-    url: 'http://localhost:3000/posts/' + id,
+    url: '/posts/' + id,
     data: {
       format: 'json'
     },
