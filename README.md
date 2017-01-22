@@ -30,5 +30,5 @@ $ json-server --watch db.json //default port is 3000
 $ json-server --watch db.json --port 3005
 ```
 ##Reference
-*[json-server](https://github.com/typicode/json-server)
+* [json-server](https://github.com/typicode/json-server)
 
