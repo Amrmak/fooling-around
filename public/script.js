@@ -1,10 +1,13 @@
-$('#action-button').click(function () {
-  getPostByID(2)
+$.ajax({
+  url: '/posts/',
+  async: false, //results in a warning
+  dataType: 'json',
+  success: function (response) {
+    db = response;
+  },
+  type: 'POST'
 });
-$('#action-button2').click(function () {
-  var result = $('input').val();
-  getPostByID(result);
-});
+
 function getPostByID(id) {
   $.ajax({
     url: '/posts/' + id,
@@ -16,6 +19,7 @@ function getPostByID(id) {
     },
     dataType: 'jsonp',
     success: function (data) {
+      db = JSON.stringify(data);
       var result = JSON.stringify(data);
       var $title = $('<h1>').text(result);
       $('#info').append($title);
@@ -23,3 +27,15 @@ function getPostByID(id) {
     type: 'GET'
   });
 }
+
+//Load All
+$('#action-button').click(function () {
+  getPostByID("");
+  alert(db);
+});
+
+//Text Input
+$('#action-button2').click(function () {
+  var result = $('input').val();
+  getPostByID(result);
+});
