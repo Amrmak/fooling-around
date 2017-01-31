@@ -7,7 +7,7 @@ $.ajax({
   },
   type: 'POST'
 });
-
+//Append to table by ID
 function getPostByID(id) {
   $.ajax({
     url: '/posts/' + id,
@@ -21,8 +21,9 @@ function getPostByID(id) {
     success: function (data) {
       db = JSON.stringify(data);
       var result = JSON.stringify(data);
-      var $title = $('<h1>').text(result);
-      $('#info').append($title);
+      var $title = $('<p>').text(result); // what does this do
+      console.log(data.id);
+      $('#table').append("<tr><td>"+data.id+"</td><td>"+data.title+"</td><td>"+data.author+"</td></tr>");
     },
     type: 'GET'
   });
