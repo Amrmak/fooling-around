@@ -1,20 +1,70 @@
-// List all posts in table on load
-$.ajax({
+// List all posts in table
+function refreshTable(){
+  $.ajax({
+    type: "GET", 
     url: '/posts/',
-    data: {
-      format: 'json'
+    success: function (posts) {
+      for(var i=0; i<posts.length; i++){
+        $('#table').append("<tr><td>"+posts[i].id+"</td><td>"+posts[i].title+"</td><td>"+posts[i].author+"</td></tr>");
+      }
     },
     error: function () {
-      $('#info').html('<p>An error has occurred</p>');
+      alert('An error has occurred');
     },
-    dataType: 'jsonp',
-    success: function (data) {
-      for(var i=0; i<data.length; i++){
-        $('#table').append("<tr><td>"+data[i].id+"</td><td>"+data[i].title+"</td><td>"+data[i].author+"</td></tr>");
-      }
-          },
-    type: 'GET'
+    dataType: 'jsonp'
   });
+}
+
+function addPost(post) {
+  $.ajax({
+    type: "POST",
+    url: '/posts/',
+    data: post,
+    success: function (data) {
+    $('#table').append("<tr><td>"+data.id+"</td><td>"+data.title+"</td><td>"+data.author+"</td></tr>");
+      console.log(data);
+    },
+    error: function () {
+      alert('An error has occurred');
+    },
+    dataType: 'jsonp'
+  });
+}
+
+// function deletePost(id){
+//   $.ajax({
+//     type: "DELETE",
+//     url: '/posts/',
+//     //data: post,
+//     success: function (data) {
+//       delete data[id];
+//       refreshTable();
+//     },
+//     error: function () {
+//       alert('An error has occurred');
+//     },
+//     dataType: 'jsonp'
+//   });
+// }
+
+window.onload = refreshTable();
+
+//Add post button
+$('#add-post').click(function () {
+  var post = {
+    "title": $('#title-text').val(),
+    "author": $('#author-text').val()
+  };
+  addPost(post);
+});
+
+//Delete post button
+$('#delete-post').click(function () {
+  var id = $('#delete-text').val();
+  addPost(id);
+});
+
+
 
 //Append to table by ID
 function getPostByID(id) {
@@ -37,15 +87,3 @@ function getPostByID(id) {
     type: 'GET'
   });
 }
-
-//Load All
-$('#action-button').click(function () {
-  getPostByID("");
-  alert(db);
-});
-
-//Text Input
-$('#action-button2').click(function () {
-  var result = $('input').val();
-  getPostByID(result);
-});
