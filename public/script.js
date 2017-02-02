@@ -4,7 +4,11 @@ function refreshTable(){
     type: "GET", 
     url: '/posts/',
     success: function (posts) {
-      for(var i=0; i<posts.length; i++){
+      // Clear the table rows before adding them again
+      $("#table tr").remove(); 
+
+      // Foreach post append a new row in the table!
+      for (var i=0; i<posts.length; i++) {
         $('#table').append("<tr><td>"+posts[i].id+"</td><td>"+posts[i].title+"</td><td>"+posts[i].author+"</td></tr>");
       }
     },
@@ -21,7 +25,8 @@ function addPost(post) {
     url: '/posts/',
     data: post,
     success: function (data) {
-    $('#table').append("<tr><td>"+data.id+"</td><td>"+data.title+"</td><td>"+data.author+"</td></tr>");
+      // TODO maybe reuse the logic of adding a new row here and insdie refreshTable in a function!
+      $('#table').append("<tr><td>"+data.id+"</td><td>"+data.title+"</td><td>"+data.author+"</td></tr>");
       console.log(data);
     },
     error: function () {
@@ -31,23 +36,28 @@ function addPost(post) {
   });
 }
 
-// function deletePost(id){
-//   $.ajax({
-//     type: "DELETE",
-//     url: '/posts/',
-//     //data: post,
-//     success: function (data) {
-//       delete data[id];
-//       refreshTable();
-//     },
-//     error: function () {
-//       alert('An error has occurred');
-//     },
-//     dataType: 'jsonp'
-//   });
-// }
+function deletePost(id){
+  if (!id) {
+    console.log('Cannot delete a post without an id!');
+    return;
+  }
 
-window.onload = refreshTable();
+  $.ajax({
+    type: "DELETE",
+    url: '/posts/' + id,
+    success: function (data) {
+      delete data[id];
+      refreshTable();
+    },
+    error: function (err) {
+      console.log('Couldn\'t delete the post, got error: ' + err.status + ' - ' + err.statusText);
+    },
+    dataType: 'jsonp'
+  });
+}
+
+// window.onload = refreshTable();
+window.addEventListener("load", refreshTable);
 
 //Add post button
 $('#add-post').click(function () {
@@ -61,7 +71,7 @@ $('#add-post').click(function () {
 //Delete post button
 $('#delete-post').click(function () {
   var id = $('#delete-text').val();
-  addPost(id);
+  deletePost(id);
 });
 
 
