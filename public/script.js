@@ -1,12 +1,21 @@
+// List all posts in table on load
 $.ajax({
-  url: '/posts/',
-  async: false, //results in a warning
-  dataType: 'json',
-  success: function (response) {
-    db = response;
-  },
-  type: 'POST'
-});
+    url: '/posts/',
+    data: {
+      format: 'json'
+    },
+    error: function () {
+      $('#info').html('<p>An error has occurred</p>');
+    },
+    dataType: 'jsonp',
+    success: function (data) {
+      for(var i=0; i<data.length; i++){
+        $('#table').append("<tr><td>"+data[i].id+"</td><td>"+data[i].title+"</td><td>"+data[i].author+"</td></tr>");
+      }
+          },
+    type: 'GET'
+  });
+
 //Append to table by ID
 function getPostByID(id) {
   $.ajax({
